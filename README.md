@@ -26,9 +26,10 @@ In your project's Gruntfile, add a section named `gcloud_deploy` to the data obj
 grunt.initConfig({
   gcloud_deploy: {
     options: {
-      application: // Your Appengine application ID.
-      version: // Your Appengine application version.
-      path: // The build path of your project (the path where the rest of your grunt tasks build to).
+      application: '', // Your Appengine application ID.
+      version: '', // Your Appengine application version.
+      path: '', // The build path of your project (the path where the rest of your grunt tasks build to).
+      db_path: '' // The path to your local database file (to be used when being run).
     },
     run: {
       action: 'run'

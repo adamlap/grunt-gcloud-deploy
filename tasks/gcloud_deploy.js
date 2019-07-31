@@ -16,12 +16,8 @@ module.exports = function (grunt) {
         format = require('util').format,
 
     // Constants.
-        COMMAND_KILL = 'kill `cat .grunt-gae-pid` && rm -rf .grunt-gae-pid',
-        COMMAND_RUN = 'dev_appserver.py {args}{flags}{path}',
-        COMMAND_GCLOUD = 'gcloud app deploy build/app.yaml build/index.yaml',
-        COMMAND_GCLOUD_ADVANCED = 'gcloud app deploy --project {app} --version {version} {path}/app.yaml {path}/index.yaml',
-
-        REDIRECT_DEVNULL = '>/dev/null 2>&1';
+        COMMAND_RUN = 'dev_appserver.py --enable_console {db_path} {path}',
+        COMMAND_DEPLOY = 'gcloud app deploy --project {app} --version {version} {path}/app.yaml {path}/index.yaml';
 
     /**
      * Runs GAE command.
@@ -33,6 +29,10 @@ module.exports = function (grunt) {
         command = command.replace(/{app}/g, options.application);
         command = command.replace(/{version}/g, options.version);
         command = command.replace(/{path}/g, options.path);
+
+        if (options.hasOwnProperty('db_path') && options.db_path != '') {
+            command = command.replace(/{db_path}/g, '--datastore_path=' + options.db_path);
+        }
 
         grunt.log.writeln(command);
 
@@ -49,6 +49,8 @@ module.exports = function (grunt) {
         } else {
             grunt.log.error('Error executing the action.');
         }
+
+        return childProcess.status;
     }
 
     /**
@@ -75,37 +77,16 @@ module.exports = function (grunt) {
         // Handle the action specified
         switch(this.data.action) {
             case 'run':
-            case 'kill':
-                // Kill running servers first.
-                exec(COMMAND_KILL, {}, function () {}).on('exit', function (code) {
+                // Run application using gcloud SDK
 
-                    // If the task is killed only, do not do anything else.
-                    if (code === 0) {
-                        if (options.stdout) {
-                            grunt.log.writeln('Server killed.');
-                        }
-                    }
-
-                    if (kill) {
-                        if (code !== 0) {
-                            if (options.stderr) {
-                                grunt.log.error('Server not running. Nothing to kill.');
-                            }
-                        }
-                        return done();
-                    }
-
-                    run(COMMAND_RUN, options);
-                });
-
-                break;
+                run(COMMAND_RUN, options);
+                return done();
 
             case 'deploy':
                 // Deploy application using gcloud SDK
 
-                run(COMMAND_GCLOUD_ADVANCED, options);
-
-                break;
+                run(COMMAND_DEPLOY, options);
+                return done();
 
             default:
                 // No option specified

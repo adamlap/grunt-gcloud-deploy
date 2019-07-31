@@ -42,6 +42,13 @@ module.exports = function (grunt) {
             encoding : 'utf8',
             shell: true
         });
+
+        // Process exit.
+        if (childProcess.status === 0) {
+            grunt.log.ok('Action executed successfully.');
+        } else {
+            grunt.log.error('Error executing the action.');
+        }
     }
 
     /**

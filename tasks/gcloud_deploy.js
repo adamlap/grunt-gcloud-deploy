@@ -70,8 +70,6 @@ module.exports = function (grunt) {
                 stdin: true,
                 stderr: true
             }),
-
-            kill = grunt.option('kill') || this.data.action === 'kill',
             done = this.async();
 
         // Handle the action specified
@@ -79,13 +77,13 @@ module.exports = function (grunt) {
             case 'run':
                 // Run application using gcloud SDK
 
-                run(COMMAND_RUN, options);
+                var status = run(COMMAND_RUN, options);
                 return done();
 
             case 'deploy':
                 // Deploy application using gcloud SDK
 
-                run(COMMAND_DEPLOY, options);
+                var status = run(COMMAND_DEPLOY, options);
                 return done();
 
             default:

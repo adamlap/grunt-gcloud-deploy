@@ -1,7 +1,7 @@
 {
   "name": "grunt-gcloud-deploy",
   "description": "Google App Engine GCloud SDK deployment plugin for Grunt.",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "homepage": "",
   "author": {
     "name": "Adam Lapworth",

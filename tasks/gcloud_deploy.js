@@ -16,8 +16,8 @@ module.exports = function (grunt) {
         format = require('util').format,
 
     // Constants.
-        COMMAND_RUN = 'dev_appserver.py --enable_console {db_path} {path}',
-        COMMAND_DEPLOY = 'gcloud app deploy -q --verbosity=debug --project {app} --version {version} {path}/app.yaml {path}/index.yaml {path}/cron.yaml {path}/queue.yaml';
+        COMMAND_RUN = 'python "%GCLOUD_HOME%/platform/google_appengine/dev_appserver.py" --port=8080 --enable_console --support_datastore_emulator=True {db_path} {path}',
+        COMMAND_DEPLOY = 'gcloud app deploy --project {app} --version {version} {path}/app.yaml {path}/index.yaml {path}/cron.yaml {path}/queue.yaml';
 
     /**
      * Runs GAE command.
@@ -77,19 +77,19 @@ module.exports = function (grunt) {
             case 'run':
                 // Run application using gcloud SDK
 
-                var status = run(COMMAND_RUN, options);
+                var status = run(COMMAND_RUN.replace("\\","\\\\"), options);
                 return done();
 
             case 'deploy':
                 // Deploy application using gcloud SDK
 
-                var status = run(COMMAND_DEPLOY, options);
+                var status = run(COMMAND_DEPLOY.replace("\\","\\\\"), options);
                 return done();
 
             default:
-                // No action specified
+                // No option specified
 
-                grunt.log.writeln('No grunt action specified.');
+                grunt.log.writeln('No gae-grunt option specified.');
                 return done();
         }
     });

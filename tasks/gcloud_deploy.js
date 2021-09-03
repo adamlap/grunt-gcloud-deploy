@@ -18,7 +18,6 @@ module.exports = function (grunt) {
     // Constants.
         COMMAND_RUN = 'python "%GCLOUD_HOME%/platform/google_appengine/dev_appserver.py" --port=8080 --enable_console --support_datastore_emulator=True {db_path} {path}',
         COMMAND_DEPLOY = 'gcloud app deploy --project {app} --version {version} {path}/app.yaml {path}/index.yaml {path}/cron.yaml {path}/queue.yaml';
-
     /**
      * Runs GAE command.
      * @param command
